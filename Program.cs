@@ -17,9 +17,10 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowAll",
         builder =>
         {
-            builder.AllowAnyOrigin()
-                   .AllowAnyHeader()
-                   .AllowAnyMethod();
+            builder
+                .WithOrigins("http://localhost", "http://localhost:5000", "http://localhost:3000", "https://dolmi.sodomann.dev")
+                .AllowAnyHeader()
+                .AllowAnyMethod();
         });
 });
 
@@ -39,11 +40,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-//Allow Svlet
-app.UseCors("AllowAll");
 
 app.UseHttpsRedirection();
-
 
 // Use API Key middleware
 app.UseMiddleware<ApiKeyMiddleware>();
@@ -51,6 +49,10 @@ app.UseMiddleware<ApiKeyMiddleware>();
 // Add these lines to serve static files
 app.UseDefaultFiles();
 app.UseStaticFiles();
+
+//Allow Svlet
+app.UseCors("AllowAll");
+
 
 app.UseAuthorization();
 
