@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using PokedexApi.ApiSettings;
 using PokedexApi.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -38,11 +39,18 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+//Allow Svlet
+app.UseCors("AllowAll");
 
 app.UseHttpsRedirection();
 
-//Allow Svlet
-app.UseCors("AllowAll");
+
+// Use API Key middleware
+app.UseMiddleware<ApiKeyMiddleware>();
+
+// Add these lines to serve static files
+app.UseDefaultFiles();
+app.UseStaticFiles();
 
 app.UseAuthorization();
 

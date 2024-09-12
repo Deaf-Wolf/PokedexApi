@@ -1,0 +1,100 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Test Page (Localhost)</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+
+        .container {
+            text-align: center;
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+            button:hover {
+                background-color: #0056b3;
+            }
+
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+
+        input {
+            margin: 10px 0;
+            padding: 5px;
+            width: 300px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>API Test (Localhost)</h1>
+        <input type="text" id="apiUrl" value="http://localhost:5080/api/Pokemon" placeholder="API URL">
+        <br>
+        <input type="text" id="apiKey" value="lf12kamlwvsi" placeholder="API Key">
+        <br>
+        <button id="testProtectedButton">Test Protected API</button>
+        <button id="testUnprotectedButton">Test Unprotected Route</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        async function testAPI(url, useApiKey) {
+            const apiKey = document.getElementById('apiKey').value;
+            const resultDiv = document.getElementById('result');
+            resultDiv.textContent = 'Testing...';
+
+            try {
+                const headers = useApiKey ? { 'ApiKey': apiKey } : {};
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: headers
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    resultDiv.textContent = `Success! API responded with: ${JSON.stringify(data)}`;
+                } else {
+                    const errorText = await response.text();
+                    resultDiv.textContent = `Error: ${response.status} ${response.statusText}. Details: ${errorText}`;
+                }
+            } catch (error) {
+                resultDiv.textContent = `Error: ${error.message}`;
+            }
+        }
+
+        document.getElementById('testProtectedButton').addEventListener('click', () => {
+            const apiUrl = document.getElementById('apiUrl').value;
+            testAPI(apiUrl, true);
+        });
+
+        document.getElementById('testUnprotectedButton').addEventListener('click', () => {
+            testAPI('http://localhost:5080/api/someotherroute', false);
+        });
+    </script>
+</body>
+</html>
