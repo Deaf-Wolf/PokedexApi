@@ -133,5 +133,11 @@ namespace PokedexApi.Model
 
         [Column("is_legendary")]
         public bool IsLegendary { get; set; }
+
+        [Column("quantity")]
+        public double Quantity { get; set; }
+
+        [Column("price")]
+        public int Price { get; set; }
     }
 }
